@@ -3,6 +3,12 @@ import cv2
 
 
 class Detector:
+    def __init__(self):
+        while True:
+            frame = self._videoCapture()
+            face_locations = self._faceLocations(frame)
+            self._showVideo(frame, face_locations)
+
     def _videoCapture(self):
         video_capture = cv2.VideoCapture(0)
         ret, frame = video_capture.read()
