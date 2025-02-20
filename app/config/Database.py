@@ -13,3 +13,9 @@ class Database:
         self.client = MongoClient(self.uri)
         self.db = self.client[self.db_name]
 
+    def insertDocument(self, collector_name: str, document: Dict[str, Any]) -> str:
+        collection = self.db[collector_name]
+        result = collection.insert_one(document)
+
+        return str(result.inserted_id)
+
