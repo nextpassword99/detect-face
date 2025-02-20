@@ -8,3 +8,8 @@ class Detector:
         ret, frame = video_capture.read()
 
         return frame
+
+    def _faceLocations(self, frame):
+        face_locations = face_recognition.face_locations(frame)
+        return face_locations
+
