@@ -25,3 +25,8 @@ class Database:
 
         return document
 
+    def updateDocument(self, collection_name: str, query: Dict[str, Any], new_values: Dict[str, Any]) -> int:
+        collection = self.db[collection_name]
+        result = collection.update_one(query, {"$set": new_values})
+
+        return result.modified_count
