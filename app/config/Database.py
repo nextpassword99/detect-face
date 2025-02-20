@@ -19,3 +19,9 @@ class Database:
 
         return str(result.inserted_id)
 
+    def findDocument(self, collection_name: str, query: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        collection = self.db[collection_name]
+        document = collection.find_one(query)
+
+        return document
+
