@@ -8,3 +8,8 @@ class Database:
         self.db_name = db_name
         self.client = None
         self._connect()
+
+    def _connect(self):
+        self.client = MongoClient(self.uri)
+        self.db = self.client[self.db_name]
+
