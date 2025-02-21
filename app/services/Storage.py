@@ -18,3 +18,6 @@ class Storage (Database):
 
         return self.insertDocument("faces", face_document)
     
+    def get_user_by_face_encoding(self, face_encoding: list) -> Optional[Dict[str, Any]]:
+        return self.findDocument("faces", {"face_encoding": face_encoding})
+
