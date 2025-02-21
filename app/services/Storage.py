@@ -23,3 +23,23 @@ class Storage (Database):
 
     def get_all_users(self):
         return list(self.db["faces"].find())
+
+    def update_face(self, user_data):
+        user_id = user_data['user_id']
+        
+        user = self.findDocument('users', {'user_id': user_id})
+
+        if user:
+            updated_data = {
+                'face_encoding': user_data['face_encoding'],
+                'face_image_id': user_data['face_image_id'],
+                'timestamp': user_data['timestamp']
+            }
+            updated_count = self.updateDocument('users', {'user_id': user_id}, updated_data)
+            
+            if updated_count > 0:
+                print(f"Datos del rostro para el usuario {user_id} actualizados exitosamente.")
+            else:
+                print(f"No se actualizó el usuario {user_id}.")
+        else:
+            print(f"Usuario {user_id} no encontrado para actualizar.")
