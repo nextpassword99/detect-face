@@ -21,3 +21,5 @@ class Storage (Database):
     def get_user_by_face_encoding(self, face_encoding: list) -> Optional[Dict[str, Any]]:
         return self.findDocument("faces", {"face_encoding": face_encoding})
 
+    def get_all_users(self):
+        return list(self.db["faces"].find())
