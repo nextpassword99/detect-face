@@ -44,3 +44,7 @@ class Storage (Database):
                 print(f"No se actualizó el usuario {user_id}.")
         else:
             print(f"Usuario {user_id} no encontrado para actualizar.")
+    def _image_to_binary(self, frame):
+        _, buffer = cv2.imencode('.jpg', frame)
+        face_bytes = buffer.tobytes()
+        return bson.Binary(face_bytes)
