@@ -8,7 +8,7 @@ class Compare:
     def __init__(self, face_recognition: face_recognition):
         self.face_recognition = face_recognition
         self.storage = Storage()
-        self.users = self.storage.get_all_users()
+        self.faces = self.storage.get_all_faces()
         
     
     def _saveFaces(self, frame,  face_locations):

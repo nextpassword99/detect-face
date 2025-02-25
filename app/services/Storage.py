@@ -22,6 +22,7 @@ class Storage (Database):
         return self.findDocument("faces", {"face_encoding": face_encoding})
 
     def get_all_users(self):
+    def get_all_faces(self):
         return list(self.db["faces"].find())
 
     def update_face(self, user_data):
