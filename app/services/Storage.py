@@ -44,6 +44,15 @@ class Storage (Database):
                 print(f"No se actualizó el usuario {user_id}.")
         else:
             print(f"Usuario {user_id} no encontrado para actualizar.")
+            
+    def save_image(self, user_id, face_encoding, frame):
+        self.insertDocument('faces', {
+            'user_id': user_id,
+            'face_encoding': face_encoding,
+            'face_image': self._image_to_binary(frame),
+            'timestamp': datetime.now(),
+        })
+
     def save_user(self, user):
         self.insertDocument('users', user)
     
