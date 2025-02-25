@@ -56,6 +56,12 @@ class Compare:
                 self.storage.save_face(user_id, face_encoding, face_image_binary)
                 print(f"Nuevo rostro detectado y guardado con ID: {user_id}")
 
+    def _find_face(self, face_encoding):
+        for face in self.faces:
+            stored_encoding = np.array(face['face_encoding'])
+            result = self.face_recognition.compare_faces(
+                [stored_encoding], face_encoding, tolerance=0.4)
+            return result[0] or None
     def _save_user(self):
         id = str(np.random.randint(1000, 9999))
         user = {
