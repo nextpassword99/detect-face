@@ -3,16 +3,16 @@ from typing import Dict, Any, Optional
 import bson
 from datetime import datetime
 import numpy as np
+import cv2
 
 class Storage (Database):
-    def save_face(self, user_id: str, face_encoding: list, face_image_binary: bytes) -> str:
+    def save_face(self, user_id: str, face_encoding: list, frame) -> str:
         face_encoding_list = face_encoding.tolist() if isinstance(
             face_encoding, np.ndarray) else face_encoding
 
         face_document = {
             "user_id": user_id,
             "face_encoding": face_encoding_list,
-            "face_image": bson.Binary(face_image_binary),
             "timestamp": datetime.now()
         }
 
@@ -22,6 +22,8 @@ class Storage (Database):
         return self.findDocument("faces", {"face_encoding": face_encoding})
 
     def get_all_users(self):
+        return list(self.db["users"].find())
+
     def get_all_faces(self):
         return list(self.db["faces"].find())
 
