@@ -28,7 +28,7 @@ class Compare:
     def _find_face(self, face_encoding):
         for face in self.faces:
             stored_encoding = np.array(face['face_encoding'])
-            result = self.face_recognition.compare_faces([stored_encoding], face_encoding, tolerance=0.4)
+            result = self.face_recognition.compare_faces([stored_encoding], face_encoding, tolerance=0.6)
 
             if result[0]:
                 return face
