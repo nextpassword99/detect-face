@@ -50,7 +50,7 @@ class Storage (Database):
     def save_image(self, user_id, face_encoding, frame):
         self.insertDocument('faces', {
             'user_id': user_id,
-            'face_encoding': face_encoding,
+            'face_encoding': face_encoding.tolist(),
             'face_image': self._image_to_binary(frame),
             'timestamp': datetime.now(),
         })
