@@ -8,50 +8,39 @@ class Compare:
     def __init__(self, face_recognition: face_recognition):
         self.face_recognition = face_recognition
         self.storage = Storage()
-        self.users = self.storage.get_all_users()
+        self.faces = self.storage.get_all_faces()
         
-    
-    def _saveFaces(self, frame,  face_locations):
+    def _saveFaces(self, frame, face_locations):
         face_encodings = self.face_recognition.face_encodings(frame, face_locations)
 
-        for face_encoding, (top, right, bottom, left) in zip(face_encodings, face_locations):
-            matches = []
-
-            for user in self.users:
-                stored_encoding = np.array(user['face_encoding'])
-                result = self.face_recognition.compare_faces(
-                    [stored_encoding], face_encoding, tolerance=0.4)
-                if result[0]:
-                    matches.append(user)
-
-            if matches:
-                user = matches[0]
-                last_saved = user['timestamp']
-                now = datetime.now()
-
-                time_difference = now - last_saved
-                if time_difference > timedelta(minutes=10):
-                    print(
-                        f"Rostro identificado: {user['user_id']}, actualizando imagen.")
-
-                    _, buffer = cv2.imencode('.jpg', frame)
-                    face_image_binary = buffer.tobytes()
-
-                    user_data = {
-                        "user_id": user['user_id'],
-                        "face_encoding": face_encoding.tolist(),
-                        "face_image_id": user['user_id'],
-                        "timestamp": now
-                    }
-
-                    self.storage.update_face(user_data)
-                else:
-                    print(
-                        f"Rostro identificado: {user['user_id']}, pero no han pasado 10 minutos desde la última vez.")
+        for face_encoding in face_encodings:
+            face = self._find_face(face_encoding)
+            if face is None:
+                user_id = self._save_user()
+                print('Nuevo rostro')
             else:
-                user_id = str(np.random.randint(1000, 9999))
-                _, buffer = cv2.imencode('.jpg', frame)
-                face_image_binary = buffer.tobytes()
+                user_id = face['user_id']
+                print('Rostro reconocido')
 
-                self.storage.save_face(user_id, face_encoding, face_image_binary)
-                print(f"Nuevo rostro detectado y guardado con ID: {user_id}")
+            self.storage.save_image(user_id, face_encoding, frame)
+            self.faces = self.storage.get_all_faces()
+
+    def _find_face(self, face_encoding):
+        for face in self.faces:
+            stored_encoding = np.array(face['face_encoding'])
+            result = self.face_recognition.compare_faces([stored_encoding], face_encoding, tolerance=0.6)
+
+            if result[0]:
+                return face
+        return None
+    
+    def _save_user(self):
+        id = str(np.random.randint(1000, 9999))
+        user = {
+            'user_id': id,
+            'name': 'Desconocido',
+        }
+
+        self.storage.save_user(user)
+
+        return id
